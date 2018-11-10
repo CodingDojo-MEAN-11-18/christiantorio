@@ -61,10 +61,10 @@
 // var genre = "disco";
 // rewind();
 // function rewind() {
-// 	genre = "rock";
-// 	console.log(genre);
-// 	var genre = "r&b";
-// 	console.log(genre);
+// genre = "rock";
+// console.log(genre);
+// var genre = "r&b";
+// console.log(genre);
 // }
 // console.log(genre);
 
@@ -76,10 +76,10 @@
 // console.log(dojo);
 // learn();
 // function learn() {
-// 	dojo = "seattle";
-// 	console.log(dojo);
-// 	var dojo = "burbank";
-// 	console.log(dojo);
+// dojo = "seattle";
+// console.log(dojo);
+// var dojo = "burbank";
+// console.log(dojo);
 // }
 // console.log(dojo);
 
@@ -102,4 +102,4 @@
 //         return dojo;
 // }
 
-// will produce error since dojo array is const. 
+// will produce error since dojo array is const
