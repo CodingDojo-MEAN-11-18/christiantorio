@@ -13,7 +13,7 @@
             $('button').click (function(){
                 $.get("https://api.github.com/users/christiantorio", function (data) {
                     myName = data.name;
-                    document.getElementById("name").innerHTML =myName
+                    document.getElementById("name").innerHTML = myName;
                 });
             });
         });
