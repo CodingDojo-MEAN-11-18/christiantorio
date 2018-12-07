@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Survey Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://localhost:8000/socket.io/socket.io.js"></script>
+    <script>
+            $(document).ready(function(){
+              let socket = io.connect();
+              $('#submit').click(function(){
+                socket.emit('posting_form', {
+                  name: $('#name').val(),
+                  location: $('#dojo_loc').val(),
+                  language: $('#fav_language').val(),
+                  comment: $('#comment').val()
+                });
+              });
+              socket.on('updated_message', function(data){
+                console.log(data.response);
+                $('#message').text(`${data.response}`);
+              });
+            });
+          
+          
+          </script>
+    </head>
+    <body>
+        <div class = 'container'>
+            <p id="message"></p>
+            <form id = 'submit'>
+                <div class="form-group">
+                    Your Name: <input type="text" id = 'name' class = 'form-control' name = 'name'>
+                </div>
+                <div class="form-group">
+                    Dojo Location: <select name = "dojo_loc" id = 'dojo_loc'class = 'form-control'>
+                        <option value="San Jose">San Jose</option>
+                        <option value="Seattle">Seattle</option>
+                        <option value="Los Angeles">Los Angeles</option>
+                        <option value="San Francisco">San Francisco</option>
+                        </select>
+                </div>
+                <div class="form-group">
+                    Favorite Language: <select name = "fav_language" id = 'fav_language' class = 'form-control'>
+                        <option value="Python">Python</option>
+                        <option value="JavaScript">JavaScript</option>
+                        <option value="Java">Java</option>
+                        <option value="HTML">HTML</option>
+                        </select>
+                </div>
+                <div class="form-group">
+                    You comment: <textarea name="comment" id = 'comment' class = 'form-control' cols="30" rows="5"></textarea>   
+                </div>
+                <div>
+                    <input type="submit" value = 'Submit'>
+                </div>
+            </form>
+        </div>
+    </body>
+    </html>
