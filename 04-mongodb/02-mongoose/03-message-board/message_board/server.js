@@ -4,10 +4,6 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const flash = require('express-flash');
-
-app.use(flash());
-mongoose.Promise = global.Promise;
-
 app.use(session({
   secret: 'asfasdfgadgadg',
   resave: false,
@@ -15,7 +11,11 @@ app.use(session({
   cookie: { maxAge: 60000 }
 }));
 
-mongoose.connect('mongodb://localhost/message_board', { useNewUrlParser: true }, function (err, db) {
+app.use(flash());
+
+mongoose.Promise = global.Promise;
+
+mongoose.connect('mongodb://localhost/messages', { useNewUrlParser: true }, function (err, db) {
   if (err) {
     console.log('error here');
     console.log(err);
@@ -45,9 +45,12 @@ mongoose.model('Message', MessageSchema);
 const Message = mongoose.model('Message');
 
 app.get('/', function (req, res) {
-  Message.find({}, function (err, Message) {
-    if (err) { console.log(err); }
-    res.render('index', { messages: Message });
+  Message.find({}).populate('comments').exec(function (err, messages) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render('index.ejs', { messages: messages });
+    }
   });
 });
 
@@ -58,45 +61,37 @@ app.post('/message', function (req, res) {
   message.save(function (err) {
     if (err) {
       console.log('something went wrong');
-      res.render('index.ejs', { errors: Message.errors });
+      for (let key in err.errors) {
+        console.log(err.errors[key].message)
+        req.flash('errors', err.errors[key].message);
+      }
+      res.redirect('/');
     } else {
-      console.log('successfully added message!');
+      console.log('adding a new message');
+      res.redirect('/');
     }
-    res.redirect('/');
   });
 });
-
 app.post('/comment/:id', function (req, res) {
 
   console.log('POST DATA', req.body);
-
-  Comment.create(req.body, function (err, data) {
-    if (err) {
-      console.log('first step')
-      console.log(err)
-      console.log('We have an error!', err);
-      for (var key in err.errors) {
-        req.flash('comment', err.errors[key].message);
-      }
-      res.redirect('/')
-    } else {
-      Message.findByIdAndUpdate({ _id: req.params.id }, { new: true }, { $push: { comment: data }, 
-        function (err, data) {
-          if (err) {
-            for (var key in err.errors) {
-              req.flash('comment', err.errors[key].message);
-            }
-            console.log('trying to push a comment');
-            console.log(err);
-          } else {
-            Message.save;
-            console.log(data);
-            res.redirect('/')
-          }
-        }
-      });
-    }
-  });
+  const comment = new Comment(req.body);
+  comment.save()
+    .then(comment => {
+      return Message.findById(req.params.id)
+        .then(message => {
+          console.log('adding a new comment')
+          message.comments.push(comment);
+          return message.save();
+        })
+        .then(() => {
+          res.redirect('/');
+        });
+    })
+    .catch(error => {
+      Object.keys(error.errors).map(key => req.flash('errors', error.errors[key].message));
+      res.redirect('/');
+    });
 });
 
 app.listen(8000, function () {

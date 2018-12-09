@@ -13,6 +13,17 @@
         #message{
             margin-top: 15px;
         }
+        fieldset{
+          fieldset {
+            border: 2px solid #f00;
+          }
+          legend {
+            float: left;
+            width: 100%;
+            padding: 0;
+            font-weight: bold;
+          }
+        }
     </style>
 </head>
     <body>
@@ -20,6 +31,11 @@
         <div>
             <h2>Welcome to the Message Board</h2>
             <form action="/message" method = "POST">
+            <% if(messages.errors) { %>
+                <% for (var x of messages.errors) { %>
+                  <h3><%= x %></h3>
+                <% } %>
+            <% } %>
                 <div class="form-group">
                     Name <input type="text" class = 'form-control' name = 'name'>
                 </div>
@@ -35,6 +51,16 @@
             <% for (const message of messages) { %>
                 <h2>Name: <%= message.name %></h2>
                 <h2>Message: <%= message.message %></h2>
+                <form>
+                      <fieldset>
+                        <% for (const comment of message.comments) { %>
+                        <legend>Comment</legend>
+                        <h5><%="Name: " + comment.name_comment %></h5>
+                        <h5><%="Comment: " + comment.comment %></h5>
+                        <% } %>
+                      </fieldset>
+                </form>
+
                 <form action="/comment/<%= message.id %>" method = "POST">
                     <div class="form-group">
                         Name <input type="text" class = 'form-control' name = 'name_comment'>

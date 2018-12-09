@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const flash = require('express-flash');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 app.use(flash());
 mongoose.Promise = global.Promise;
@@ -32,58 +34,64 @@ app.set('view engine', 'ejs');
 const UserSchema = new mongoose.Schema({
   firstName: { type: String, required: [true, 'Must leave a name'] },
   lastName: { type: String, required: [true, 'Must leave a comment'] },
-  email: { type: String, required: [true, 'Must leave a comment'] },
-  password: { type: String, required: [true, 'Must leave a comment'] },
-  birthday: { type: String, required: [true, 'Must leave a comment'] }
+  email: { type: String, required: [true, 'Must leave an email'] },
+  password: { type: String, required: [true, 'Must leave a password'] },
+  confirmPassword: { type: String, required: [true, 'Must leave a password'] }
 }, { timestamps: true });
 mongoose.model('User', UserSchema);
 const User = mongoose.model('User');
 
 app.get('/', function (req, res) {
-  Message.find({}, function (err, Message) {
-    if (err) { console.log(err); }
-    res.render('index', { messages: Message });
-  });
+  res.render('index');
 });
 
-app.post('/message', function (req, res) {
+app.post('/register', function (req, res) {
   console.log('POST DATA', req.body);
-  const message = new Message({ name: req.body.name, message: req.body.message });
 
-  message.save(function (err) {
+  var user = new User({ firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, password: req.body.password, confirmPassword: req.body.confirmpassword });
+
+  bcrypt.hash('password_from_form', 10)
+.then(hashed_password => {
+
+})
+.catch(error => {
+
+});
+  user.save(function (err) {
     if (err) {
       console.log('something went wrong');
-      res.render('index.ejs', { errors: Message.errors });
+      res.redirect('/');
     } else {
-      console.log('successfully added message!');
+      bcrypt.hash(req.body.password, 10)
+        .then('password' => {
+          { firstName: req.body.firstname,
+            lastName: req.body.lastname,
+            email: req.body.email,
+            password: password
+          }
+      })
+      .catch(error => {
+        console.log('error')
+      });
+
     }
     res.redirect('/');
   });
 });
 
-app.post('/comment/:id', function (req, res) {
-  console.log('POST DATA', req.body);
-
-  Comment.create(req.body, function (err, comment) {
-    if (err) {
-      console.log('first step')
-      console.log(err);
-    } else {
-      Message.findOne({ _id: req.params.id }, { $push: { comment: comment },
-        function (err, comment) {
-          if (err) {
-            console.log('trying to push a comment');
-            console.log(err);
-          } else {
-            console.log(comment);
-            console.log('pushing comment now');
-            res.redirect('/')
-          }
-        }
-      });
-    }
-  });
-});
+// app.post('/sessions', (req, res) {
+//   console.log(' req.body: ', req.body);
+//   User.findOne({ email: req.body.email, password: req.body.password }, (err, user) => {
+//     if (err) {
+//       console.log(err);
+//     }
+//     else {
+//       req.session.user_id = user._id;
+//       req.session.email = user.email;
+//       res.redirect('/');
+//     }
+//   });
+// });
 
 app.listen(8000, function () {
   console.log('listening on port 8000');
