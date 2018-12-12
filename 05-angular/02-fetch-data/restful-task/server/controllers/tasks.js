@@ -1,28 +1,28 @@
 const Task = require('mongoose').model('Task');
-const errorHandler = require('./error-handler');
+const errorHandler = require('./concerns/error-handler');
 
 module.exports = {
-  index: function (request, response) {
+  index: (request, response) => {
     Task.find(request.body)
-      .then(tasks => response.json(tasks))
+      .then(response => console.log('Success', JSON.stringify(response)))
       .catch(errorHandler.bind(response));
   },
-  show: function (request, response) {
+  show: (request, response) => {
     Task.findById(request.params.id)
       .then(task => response.json(task))
       .catch(errorHandler.bind(response));
   },
-  create: function (request, response) {
+  create: (request, response) => {
     Task.create(request.body)
       .then(task => response.json(task))
       .catch(errorHandler.bind(response));
   },
-  update: function (request, response) {
+  update: (request, response) => {
     Task.findByIdAndUpdate(request.params.id, request.body, { new: true })
       .then(task => response.json(task))
       .catch(errorHandler.bind(response));
   },
-  destroy: function (request, response) {
+  destroy: (request, response) =>{
     Task.findByIdAndRemove(request.params.id)
       .then(result => response.json(result))
       .catch(errorHandler.bind(response));

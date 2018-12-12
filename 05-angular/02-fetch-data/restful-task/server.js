@@ -16,6 +16,7 @@ app.use(helmet())
   .use(parser.json())
   .use(parser.urlencoded({ extended: true }));
 
+require('./server/config/database');
 app.use(express.static(__dirname + '/public/dist/public'));
 
 app.listen(port, () => console.log(`express listening on port ${port}`));

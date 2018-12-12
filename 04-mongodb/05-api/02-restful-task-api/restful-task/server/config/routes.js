@@ -1,9 +1,9 @@
-const taskController = require('../../controllers/task.controller');
-const router = require('express').Router();
+const taskController = require('../controllers/tasks');
 
-module.exports = router
-  .get('/', taskController.index)
-  .get('/:id', taskController.show)
-  .post('/', taskController.create)
-  .put('/:id', taskController.update)
-  .delete('/:id', taskController.destroy);
+module.exports = function (app) {
+  app.get('/', taskController.index);
+  app.get('/:id', taskController.show);
+  app.post('/', taskController.create);
+  app.put('/:id', taskController.update);
+  app.delete('/:id', taskController.destroy);
+};

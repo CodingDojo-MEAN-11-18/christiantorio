@@ -19,6 +19,6 @@ app.use(helmet())
 require('./server/config/database');
 
 // routes
-app.use('/tasks', require('./server/config/routes/'));
+require('./server/config/routes.js')(app);
 
 app.listen(port, () => console.log(`express listening on port ${ port }`));
