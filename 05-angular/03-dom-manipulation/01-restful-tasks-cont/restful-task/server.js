@@ -3,11 +3,11 @@ const parser = require('body-parser');
 const express = require('express');
 const helmet = require('helmet');
 const logger = require('morgan');
+const path = require('path');
 const cors = require('cors');
 
-var app = express();
-
 const port = process.env.PORT || 8000;
+const app = express();
 
 app.use(helmet())
   .use(compress())
@@ -16,6 +16,8 @@ app.use(helmet())
   .use(parser.json())
   .use(parser.urlencoded({ extended: true }));
 
-app.use(express.static(__dirname + '/public/dist/public'));
+require('./server/config/database');
+app.use(express.static(path.resolve('/public/dist/public')));
+require('./server/config/routes.js')(app);
 
-app.listen(port, () => console.log(`express listening on port ${port}`));
+app.listen(port, () => console.log(`express listening on port ${ port }`));

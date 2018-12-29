@@ -2,7 +2,7 @@ const Task = require('mongoose').model('Task');
 const errorHandler = require('./error-handler');
 
 module.exports = {
-  index: function (request, response) {
+  index: (request, response) {
     Task.find(request.body)
       .then(tasks => response.json(tasks))
       .catch(errorHandler.bind(response));

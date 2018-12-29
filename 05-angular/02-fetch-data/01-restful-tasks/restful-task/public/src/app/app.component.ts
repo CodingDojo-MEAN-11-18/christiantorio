@@ -7,14 +7,19 @@ import { HttpService } from './http.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'public';
   tasks = [];
 
-  constructor(private _httpService: HttpService) {}
-  // ngOnInit will run when the component is initialized, after the constructor method.
+  constructor(private _httpService: HttpService) {
+  }
+
   ngOnInit() {
     this.getTasksFromService();
+    // this.showTasks();
+    // this.createTasks();
+    // this.updateTasks();
+    // this.destroyTasks();
   }
+
   getTasksFromService() {
     let observable = this._httpService.getTasks();
     observable.subscribe(data => {
@@ -22,4 +27,36 @@ export class AppComponent implements OnInit {
       this.tasks = data['tasks'];
   });
  }
+//   showTasks() {
+//     let observable = this._httpService.showTasks();
+//     observable.subscribe(data => {
+//       console.log('Got the one tasks!', data);
+//       this.tasks = data['tasks'];
+//   });
+//  }
+
+//   createTasks() {
+//     let observable = this._httpService.showTasks();
+//     observable.subscribe(data => {
+//       console.log('Got the one tasks!', data);
+//       this.tasks = data['tasks'];
+//   });
+//  }
+
+//   updateTasks() {
+//     let observable = this._httpService.showTasks();
+//     observable.subscribe(data => {
+//       console.log('Got the one tasks!', data);
+//       this.tasks = data['tasks'];
+//   });
+//  }
+
+//  destroyTasks() {
+//   let observable = this._httpService.showTasks();
+//   observable.subscribe(data => {
+//     console.log('Got the one tasks!', data);
+//     this.tasks = data['tasks'];
+//   });
+//  }
+
 }

@@ -11,7 +11,7 @@
     <script>
         $(document).ready(function(){
             $('button').click (function(){
-                $.get("https://api.github.com/users/christiantorio", function (data) {
+                $.get("https://api.github.com/users/christiantorio", function displayName(data) {
                     myName = data.name;
                     document.getElementById("name").innerHTML = myName;
                 });
@@ -24,5 +24,4 @@
     <h3>This is my name on GitHub:</h3>
     <p id = "name"></p>
 </body>
-
 </html>
